@@ -4,22 +4,50 @@
   <meta charset="UTF-8">
   <title>TikTok Redirect</title>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    code { background: #f5f5f5; padding: 5px 10px; border-radius: 5px; display: inline-block; }
+    body {
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      margin-top: 60px;
+      color: #222;
+    }
+    code {
+      background: #f5f5f5;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+    .ok {
+      color: #007700;
+    }
+    .error {
+      color: #b00020;
+    }
   </style>
 </head>
 <body>
-  <h2>Авторизация TikTok прошла успешно ✅</h2>
-  <p>Скопируйте этот код и отправьте его вашему Telegram-боту:</p>
-  <p id="code"><em>Загрузка...</em></p>
+  <div id="content"></div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
     const state = params.get("state");
-    document.getElementById("code").innerHTML = code
-      ? `<code>${code}</code><br>Ваш state: <code>${state}</code>`
-      : "❌ Код не найден. Попробуйте авторизоваться снова.";
+
+    const container = document.getElementById("content");
+
+    if (code) {
+      container.innerHTML = `
+        <h2 class="ok">Авторизация TikTok прошла успешно ✅</h2>
+        <p>Скопируйте этот код и отправьте его вашему Telegram-боту:</p>
+        <p><code>${code}</code></p>
+        ${state ? `<p>Ваш state: <code>${state}</code></p>` : ""}
+      `;
+    } else {
+      container.innerHTML = `
+        <h2 class="error">⚠️ Ошибка: Код авторизации не найден</h2>
+        <p>Похоже, TikTok не передал код. Попробуйте пройти авторизацию снова через вашего Telegram-бота.</p>
+      `;
+    }
   </script>
 </body>
 </html>
