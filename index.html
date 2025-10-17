@@ -53,25 +53,29 @@
     if (code) {
       container.innerHTML = `
         <h2 class="ok">TikTok authorization succeeded ✅</h2>
-        <p>Use buttons to show, hide or copy the code:</p>
+        <p>Use buttons to show/hide or copy the code:</p>
         <div class="token-box" id="token">********</div>
         <br>
-        <button id="showBtn">Show code</button>
-        <button id="hideBtn">Hide code</button>
+        <button id="toggleBtn">Show code</button>
         <button id="copyBtn">Copy code</button>
       `;
 
       const tokenBox = document.getElementById("token");
-      const showBtn = document.getElementById("showBtn");
-      const hideBtn = document.getElementById("hideBtn");
+      const toggleBtn = document.getElementById("toggleBtn");
       const copyBtn = document.getElementById("copyBtn");
 
-      showBtn.addEventListener("click", () => {
-        tokenBox.textContent = code;
-      });
+      let isShown = false;
 
-      hideBtn.addEventListener("click", () => {
-        tokenBox.textContent = "********";
+      toggleBtn.addEventListener("click", () => {
+        if (isShown) {
+          tokenBox.textContent = "********";
+          toggleBtn.textContent = "Show code";
+          isShown = false;
+        } else {
+          tokenBox.textContent = code;
+          toggleBtn.textContent = "Hide code";
+          isShown = true;
+        }
       });
 
       copyBtn.addEventListener("click", () => {
