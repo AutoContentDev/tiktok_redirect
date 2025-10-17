@@ -10,18 +10,34 @@
       margin-top: 60px;
       color: #222;
     }
-    code {
-      background: #f5f5f5;
-      padding: 6px 12px;
-      border-radius: 6px;
-      display: inline-block;
-      margin-top: 8px;
-    }
     .ok {
       color: #007700;
     }
     .error {
       color: #b00020;
+    }
+    .token-box {
+      display: inline-block;
+      background: #f5f5f5;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-family: monospace;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #0077cc;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:active {
+      background-color: #005fa3;
     }
   </style>
 </head>
@@ -31,21 +47,44 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
-    const state = params.get("state");
 
     const container = document.getElementById("content");
 
     if (code) {
       container.innerHTML = `
-        <h2 class="ok">Авторизация TikTok прошла успешно ✅</h2>
-        <p>Скопируйте этот код и отправьте его вашему Telegram-боту:</p>
-        <p><code>${code}</code></p>
-        ${state ? `<p>Ваш state: <code>${state}</code></p>` : ""}
+        <h2 class="ok">TikTok authorization succeeded ✅</h2>
+        <p>Use buttons to show, hide or copy the code:</p>
+        <div class="token-box" id="token">********</div>
+        <br>
+        <button id="showBtn">Show code</button>
+        <button id="hideBtn">Hide code</button>
+        <button id="copyBtn">Copy code</button>
       `;
+
+      const tokenBox = document.getElementById("token");
+      const showBtn = document.getElementById("showBtn");
+      const hideBtn = document.getElementById("hideBtn");
+      const copyBtn = document.getElementById("copyBtn");
+
+      showBtn.addEventListener("click", () => {
+        tokenBox.textContent = code;
+      });
+
+      hideBtn.addEventListener("click", () => {
+        tokenBox.textContent = "********";
+      });
+
+      copyBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(code).then(() => {
+          copyBtn.textContent = "Copied!";
+          copyBtn.disabled = true;
+        });
+      });
+
     } else {
       container.innerHTML = `
-        <h2 class="error">⚠️ Ошибка: Код авторизации не найден</h2>
-        <p>Похоже, TikTok не передал код. Попробуйте пройти авторизацию снова через вашего Telegram-бота.</p>
+        <h2 class="error">⚠️ Error: Authorization code not found</h2>
+        <p>Please retry authorization via your Telegram bot.</p>
       `;
     }
   </script>
